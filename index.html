@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DailyPulse - Task Tracker</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+  
+  <div id="app" class="dashboard">
+    <!-- Header injected by app.js -->
+    <header class="dashboard-header" id="dashboard-header">
+      <div class="header-info">
+        <h1 id="greeting">Good Morning</h1>
+        <p id="current-date" class="date-display">--</p>
+      </div>
+      <div class="progress-container">
+        <!-- Progress bar injected here -->
+      </div>
+    </header>
+
+    <main class="task-board">
+      
+      <!-- Today's Tasks -->
+      <section class="task-section" id="section-today">
+        <h2>Today's Focus</h2>
+        <div class="task-list" id="list-today"></div>
+      </section>
+
+      <!-- Pending Tasks -->
+      <section class="task-section pending-section" id="section-pending">
+        <h2>Carry-over <span class="badge">Pending</span></h2>
+        <p class="section-desc">From Yesterday</p>
+        <div class="task-list" id="list-pending"></div>
+      </section>
+
+      <!-- Completed Tasks -->
+      <section class="task-section completed-section" id="section-completed">
+        <div class="completed-header">
+          <h2>Completed</h2>
+          <button id="toggle-completed" class="toggle-btn collapse-icon" aria-label="Toggle completed tasks">▼</button>
+        </div>
+        <div class="task-list" id="list-completed"></div>
+      </section>
+
+    </main>
+
+    <!-- FAB -->
+    <button id="fab-add-task" class="fab floating" aria-label="Add Task">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="12" y1="5" x2="12" y2="19"></line>
+        <line x1="5" y1="12" x2="19" y2="12"></line>
+      </svg>
+    </button>
+
+    <!-- Add Task Modal -->
+    <div id="add-task-modal" class="modal hidden">
+      <div class="modal-content glass-effect">
+        <div class="modal-header">
+          <h3>New Task</h3>
+          <button class="close-btn" id="close-modal">&times;</button>
+        </div>
+        <form id="add-task-form">
+          <input type="text" id="task-title" placeholder="What needs to be done?" required autocomplete="off" class="premium-input">
+          <input type="text" id="task-time" placeholder="Time Frame (e.g. 10AM - 11AM)" autocomplete="off" class="premium-input-small">
+          
+          <div class="form-actions">
+            <button type="submit" class="primary-btn">Add Task</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script src="./store.js"></script>
+  <script src="./app.js"></script>
+</body>
+</html>
