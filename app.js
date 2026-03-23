@@ -202,12 +202,25 @@ const weatherImages = {
 };
 
 async function setWeatherBackground() {
-  const setBg = (url) => { 
-    document.body.style.backgroundImage = `url('${url}'), linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%)`; 
+  const applyBgFade = (url) => {
+    const img = new Image();
+    img.src = url;
+    img.onload = () => {
+      let bgLayer = document.getElementById('bg-layer');
+      if (!bgLayer) {
+        bgLayer = document.createElement('div');
+        bgLayer.id = 'bg-layer';
+        document.body.prepend(bgLayer);
+      }
+      bgLayer.style.backgroundImage = `url('${url}')`;
+      requestAnimationFrame(() => {
+        bgLayer.style.opacity = '1';
+      });
+    };
   };
   
-  // Set default first so there's always an image
-  setBg(weatherImages.default);
+  // Set default first so there's always an image gracefully loading
+  applyBgFade(weatherImages.default);
 
   if ("geolocation" in navigator) {
     navigator.geolocation.getCurrentPosition(async (position) => {
@@ -217,14 +230,13 @@ async function setWeatherBackground() {
         const data = await res.json();
         const code = data.current_weather.weathercode;
         
-        // Map WMO Weather codes
         let type = 'clear';
         if (code >= 1 && code <= 3) type = 'cloudy';
         if (code >= 51 && code <= 67) type = 'rain';
         if (code >= 71 && code <= 86) type = 'snow';
         if (code >= 95) type = 'rain'; // Thunderstorm
         
-        setBg(weatherImages[type]);
+        applyBgFade(weatherImages[type]);
       } catch (err) {
         console.error("Weather fetch failed", err);
       }
