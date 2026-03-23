@@ -23,10 +23,13 @@ const input = document.getElementById('task-title');
 
 // Initialize layout
 function init() {
+  // CLEAR ON STARTUP ONCE
+  if (!localStorage.getItem('cleared_once')) {
+     localStorage.setItem('cleared_once', 'true');
+  }
   updateHeader();
   renderAllTasks();
   setupEventListeners();
-  setWeatherBackground();
 }
 
 function updateHeader() {
@@ -190,60 +193,6 @@ function setupEventListeners() {
       updateHeader();
     }
   });
-}
-
-// WEATHER & BACKGROUND LOGIC
-const weatherImages = {
-  clear: 'https://images.unsplash.com/photo-1622396481328-9b1b78cdd9fd?q=80&w=1920&fit=crop', // Clear sky
-  cloudy: 'https://images.unsplash.com/photo-1534088568595-a06df41084c3?q=80&w=1920&fit=crop', // Clouds
-  rain: 'https://images.unsplash.com/photo-1515694346937-94d85e41e6f0?q=80&w=1920&fit=crop', // Rain
-  snow: 'https://images.unsplash.com/photo-1478265409131-1f65c88f965c?q=80&w=1920&fit=crop', // Snow
-  default: `https://picsum.photos/seed/${new Date().toDateString().replace(/ /g, '')}/1920/1080` // Daily random as fallback
-};
-
-async function setWeatherBackground() {
-  const applyBgFade = (url) => {
-    const img = new Image();
-    img.src = url;
-    img.onload = () => {
-      let bgLayer = document.getElementById('bg-layer');
-      if (!bgLayer) {
-        bgLayer = document.createElement('div');
-        bgLayer.id = 'bg-layer';
-        document.body.prepend(bgLayer);
-      }
-      bgLayer.style.backgroundImage = `url('${url}')`;
-      requestAnimationFrame(() => {
-        bgLayer.style.opacity = '1';
-      });
-    };
-  };
-  
-  // Set default first so there's always an image gracefully loading
-  applyBgFade(weatherImages.default);
-
-  if ("geolocation" in navigator) {
-    navigator.geolocation.getCurrentPosition(async (position) => {
-      try {
-        const { latitude, longitude } = position.coords;
-        const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current_weather=true`);
-        const data = await res.json();
-        const code = data.current_weather.weathercode;
-        
-        let type = 'clear';
-        if (code >= 1 && code <= 3) type = 'cloudy';
-        if (code >= 51 && code <= 67) type = 'rain';
-        if (code >= 71 && code <= 86) type = 'snow';
-        if (code >= 95) type = 'rain'; // Thunderstorm
-        
-        applyBgFade(weatherImages[type]);
-      } catch (err) {
-        console.error("Weather fetch failed", err);
-      }
-    }, () => {
-      console.log("Geolocation denied, using daily fallback image.");
-    });
-  }
 }
 
 // Boot up
