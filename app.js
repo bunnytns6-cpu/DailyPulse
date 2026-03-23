@@ -202,7 +202,9 @@ const weatherImages = {
 };
 
 async function setWeatherBackground() {
-  const setBg = (url) => { document.body.style.backgroundImage = `url('${url}')`; };
+  const setBg = (url) => { 
+    document.body.style.backgroundImage = `url('${url}'), linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%)`; 
+  };
   
   // Set default first so there's always an image
   setBg(weatherImages.default);
